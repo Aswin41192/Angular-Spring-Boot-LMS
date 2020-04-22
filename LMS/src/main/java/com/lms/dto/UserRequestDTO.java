@@ -8,17 +8,26 @@ public class UserRequestDTO {
 
 	private String userId;
 	
-	@NotBlank private String firstName;
-	@NotBlank private String lastName;
-	@NotBlank @Email
+	@NotBlank(message = "First Name should not be blank!")
+	private String firstName;
+	
+	@NotBlank(message = "Last Name should not be blank!")
+	private String lastName;
+	
+	@NotBlank(message = "EMail Should not be blank!")
+	@Email(message = "Not a Valid EMail")
 	private String email;
 	
 	@Size(min = 6,max=16,message = "Password should be greater than 6 characters long and less than 16 characters long")
 	private String password;
 	
-	@NotBlank private String roles;
+	private String roles;
 	
 	private String rawPassword;
+	
+	public UserRequestDTO() {
+		this.roles = "USER";
+	}
 	
 	public String getUserId() {
 		return userId;

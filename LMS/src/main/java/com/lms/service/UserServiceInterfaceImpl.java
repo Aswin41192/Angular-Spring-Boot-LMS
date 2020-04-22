@@ -1,8 +1,8 @@
 package com.lms.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,12 +46,14 @@ public class UserServiceInterfaceImpl implements UserServiceInterface {
 
 	@Override
 	public MultiUserResponseDTO findAll(int pageNumber,int maxSize) {
+		pageNumber = pageNumber==0?0:pageNumber-1;
 		MultiUserResponseDTO response = new MultiUserResponseDTO();
-		List<UserResponseDTO> allUsers =new ArrayList<UserResponseDTO>();
 		Pageable pageable = PageRequest.of(pageNumber, maxSize, Sort.by("firstName"));
 		Page<UserEntity> allUsersEntity = userRepository.findAll(pageable);
-		allUsersEntity.getContent().forEach(userEntity->allUsers.add(userMapper.convertEntityToDTO(userEntity)));
+		List<UserResponseDTO> allUsers = allUsersEntity.getContent().stream().map(userMapper::convertEntityToDTO)
+											.collect(Collectors.toList());
 		response.setTotalCount(allUsersEntity.getTotalElements());
+		response.setTotalPage(allUsersEntity.getTotalPages());
 		response.setUsers(allUsers);
 		return response;
 	}

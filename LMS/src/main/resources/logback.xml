@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<property name="HOME_LOG" value="logs/app.log" />
+	<property name="STARTUP_LOG" value="logs/server.log" />
+	<property name="ERROR_LOG" value="logs/error.log" />
+	
+	 <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{HH:mm:ss.SSS} [%t] %-5level - %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+    
+    <appender name="STARTUP_LOG" class="ch.qos.logback.core.FileAppender">
+    	<append>false</append>
+		<file>${STARTUP_LOG}</file>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%t] %-5level - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="FILE-ROLLING" 
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${HOME_LOG}</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>logs/archived/app.%d{yyyy-MM-dd}.%i.log.gz
+			</fileNamePattern>
+			<maxFileSize>10MB</maxFileSize>
+			<totalSizeCap>20GB</totalSizeCap>
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%d %p %c{1.} [%t]  %m%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="ERROR-FILE-ROLLING"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${ERROR_LOG}</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>logs/archived/error.%d{yyyy-MM-dd}.%i.log.gz
+			</fileNamePattern>
+			<maxFileSize>10MB</maxFileSize>
+			<totalSizeCap>20GB</totalSizeCap>
+			<maxHistory>60</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%d %p %c{1.} [%t] %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="APPLOGGER" level="info" additivity="false">
+		<appender-ref ref="FILE-ROLLING" />
+		<appender-ref ref="CONSOLE" />
+	</logger>
+	
+	<logger name="ERRORLOGGER" level="info" additivity="false">
+		<appender-ref ref="ERROR-FILE-ROLLING" />
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<root level="info">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="STARTUP_LOG" />
+	</root>
+
+</configuration>

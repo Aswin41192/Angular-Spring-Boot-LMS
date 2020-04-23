@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.lms.dto.CourseDTO;
-import com.lms.dto.MultiCourseResponseDTO;
+import com.lms.dto.MultiResponseDTO;
 import com.lms.entity.CourseEntity;
 import com.lms.exceptions.RecordNotFoundException;
 import com.lms.mapper.CourseMapper;
@@ -33,6 +33,7 @@ public class CourseServiceInterfaceImpl implements CourseServiceInterface {
 	@Override
 	public CourseDTO createCourse(CourseDTO courseDTO) {
 		 courseDTO.setCourseId(UUID.randomUUID().toString());
+		 courseDTO.getParts().forEach(part->part.setPartId(UUID.randomUUID().toString()));
 		 CourseEntity course = courseMapper.convertDTOToEntity(courseDTO);
 		 return courseMapper.convertEntityToDTO(courseReposiory.save(course));
 	}
@@ -48,18 +49,19 @@ public class CourseServiceInterfaceImpl implements CourseServiceInterface {
 	@Override
 	public CourseDTO findCourseByCourseId(String courseId)throws RecordNotFoundException {
 		CourseEntity course = findCourse(courseId);
+		System.out.println("Course Parts ->>"+course.getParts());
 		return courseMapper.convertEntityToDTO(course);
 	}
 
 	@Override
-	public MultiCourseResponseDTO findAllCourses(int page,int size) {
+	public MultiResponseDTO<CourseDTO> findAllCourses(int page,int size) {
 		page=page==0?0:page-1;
-		MultiCourseResponseDTO response = new MultiCourseResponseDTO();
+		MultiResponseDTO<CourseDTO> response = new MultiResponseDTO<CourseDTO>();
 		Pageable pageable = PageRequest.of(page, size);
 		Page<CourseEntity> courseEntities = courseReposiory.findAll(pageable);
 		List<CourseDTO> courses = courseEntities.getContent().stream().map(courseMapper::convertEntityToDTO)
 									.collect(Collectors.toList());
-		response.setCourses(courses);
+		response.setItems(courses);
 		response.setTotalCount(courseEntities.getTotalElements());
 		response.setTotalPage(courseEntities.getTotalPages());
 		return response;

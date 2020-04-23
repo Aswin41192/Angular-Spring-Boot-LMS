@@ -1,6 +1,8 @@
 package com.lms.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.FutureOrPresent;
@@ -39,6 +41,8 @@ public class CourseDTO {
 	
 	@NotBlank(message = "Created By should not be blank")
 	private String createdBy;
+	
+	private List<CoursePartResponseDTO> parts = new ArrayList<CoursePartResponseDTO>();
 	
 	public String getCourseId() {
 		return courseId;
@@ -83,6 +87,12 @@ public class CourseDTO {
 		this.createdBy = createdBy;
 	}
 	
+	public List<CoursePartResponseDTO> getParts() {
+		return parts;
+	}
+	public void setParts(List<CoursePartResponseDTO> parts) {
+		this.parts = parts;
+	}
 	@Override
 	public String toString() {
 		return "CourseDTO [courseId=" + courseId + ", courseName=" + courseName + ", startDate=" + startDate

@@ -1,13 +1,11 @@
 package com.lms.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -37,8 +35,8 @@ public class CourseEntity extends BaseEntity {
 	
 	private String createdBy;
 	
-	@OneToMany(mappedBy = "course",cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
-	private List<CoursePartEntity> parts = new ArrayList<CoursePartEntity>();
+	@OneToMany(mappedBy = "course",cascade = CascadeType.REMOVE)
+	private List<CoursePartEntity> parts;
 
 	public String getCourseId() {
 		return courseId;

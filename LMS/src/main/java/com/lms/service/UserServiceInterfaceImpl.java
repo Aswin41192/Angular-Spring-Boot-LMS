@@ -11,7 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.lms.dto.MultiUserResponseDTO;
+import com.lms.dto.MultiResponseDTO;
 import com.lms.dto.UserRequestDTO;
 import com.lms.dto.UserResponseDTO;
 import com.lms.entity.UserEntity;
@@ -45,16 +45,16 @@ public class UserServiceInterfaceImpl implements UserServiceInterface {
 
 
 	@Override
-	public MultiUserResponseDTO findAll(int pageNumber,int maxSize) {
+	public MultiResponseDTO<UserResponseDTO> findAll(int pageNumber,int maxSize) {
 		pageNumber = pageNumber==0?0:pageNumber-1;
-		MultiUserResponseDTO response = new MultiUserResponseDTO();
+		MultiResponseDTO<UserResponseDTO> response = new MultiResponseDTO<UserResponseDTO>();
 		Pageable pageable = PageRequest.of(pageNumber, maxSize, Sort.by("firstName"));
 		Page<UserEntity> allUsersEntity = userRepository.findAll(pageable);
 		List<UserResponseDTO> allUsers = allUsersEntity.getContent().stream().map(userMapper::convertEntityToDTO)
 											.collect(Collectors.toList());
 		response.setTotalCount(allUsersEntity.getTotalElements());
 		response.setTotalPage(allUsersEntity.getTotalPages());
-		response.setUsers(allUsers);
+		response.setItems(allUsers);
 		return response;
 	}
 

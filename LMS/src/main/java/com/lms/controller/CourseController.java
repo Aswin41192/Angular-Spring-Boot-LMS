@@ -3,6 +3,7 @@ package com.lms.controller;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.lms.dto.CourseDTO;
-import com.lms.dto.MultiCourseResponseDTO;
+import com.lms.dto.MultiResponseDTO;
 import com.lms.exceptions.RecordNotFoundException;
 import com.lms.service.CourseServiceInterface;
 
@@ -37,11 +39,11 @@ public class CourseController extends BaseController {
 	}
 
 	@GetMapping
-	public ResponseEntity<MultiCourseResponseDTO> findAllCourses(
+	public ResponseEntity<MultiResponseDTO<CourseDTO>> findAllCourses(
 			@RequestParam(name = "page", defaultValue = "0") int page,
 			@Min(value = 1, message="Size parameter should be greater than 0") @RequestParam(name = "size", defaultValue = "5") int size) {
 		logger.info("Inside the method {} -------->","findAllCourses");
-		MultiCourseResponseDTO allCourses = courseServiceInterfaceImpl.findAllCourses(page, size);
+		MultiResponseDTO<CourseDTO> allCourses = courseServiceInterfaceImpl.findAllCourses(page, size);
 		logger.info("Courses ---------> {}",allCourses);
 		return getResponseEntity_WithStatusOk(allCourses);
 	}

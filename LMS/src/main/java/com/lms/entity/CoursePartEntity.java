@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "course_parts")
+@Table(name = "COURSE_PARTS")
 public class CoursePartEntity extends BaseEntity{
 
 	private String partId;
